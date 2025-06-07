@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galeria Ninkasi Beer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #f9f6ef;
+      font-family: 'Open Sans', sans-serif;
+      color: #3c3526;
+    }
+    h1 {
+      font-family: 'Cinzel', serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="py-6 bg-[#f2e9d8] border-b-4 border-[#d4b065]">
+    <div class="container mx-auto flex flex-col items-center justify-center text-center">
+      <a href="index.html">
+        <img src="/img/logoninkasi.png" alt="Logo Ninkasi Beer" class="w-16 h-auto hover:scale-105 transition-transform duration-200 mb-2" />
+      </a>
+      <h1 class="text-4xl font-bold">Galeria Ninkasi Beer</h1>
+      <p class="text-lg mt-2">Momentos que celebram nossa história e sabor</p>
+    </div>
+  </header>
+
+  <main class="container mx-auto py-12 px-4 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <!-- Imagens -->
+    <img src="/img/processo/circuito eletrico.jpg" alt="Imagem 1" class="rounded shadow-lg object-cover w-full h-[300px]">
+    <img src="/img/processo/circuito.jpg" alt="Imagem 2" class="rounded shadow-lg object-cover w-full h-[300px]">
+    <img src="/img/processo/envase1.jpg" alt="Imagem 3" class="rounded shadow-lg object-cover w-full h-[300px]">
+    <img src="/img/processo/envasecerveja.jpg" alt="Imagem 4" class="rounded shadow-lg object-cover w-full h-[300px]">
+    <img src="/img/processo/fermentação.png" alt="Imagem 5" class="rounded shadow-lg object-cover w-full h-[300px]">
+    <img src="/img/processo/fervuracerveja.jpg" alt="Imagem 6" class="rounded shadow-lg object-cover w-full h-[300px]">
+    <img src="/img/processo/higienizacao.jpg" alt="Imagem 7" class="rounded shadow-lg object-cover w-full h-[300px]">
+    <img src="/img/processo/mosturaçãocerveja.jpg" alt="Imagem 8" class="rounded shadow-lg object-cover w-full h-[300px]">
+    <img src="/img/processo/producao1.jpg" alt="Imagem 9" class="rounded shadow-lg object-cover w-full h-[300px]">
+
+
+    <!-- Vídeos -->
+    <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
+      <video controls class="rounded shadow-lg w-full max-h-[600px] object-contain">
+        <source src="/img/processo/producao.mp4" type="video/mp4">
+        Seu navegador não suporta vídeo HTML5.
+      </video>
+    </div>
+
+    <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
+      <video controls class="rounded shadow-lg w-full max-h-[600px] object-contain">
+        <source src="/img/processo/envase2.mp4" type="video/mp4">
+        Seu navegador não suporta vídeo HTML5.
+      </video>
+    </div>
+  </main>
+
+  <footer class="text-center py-4 bg-[#f2e9d8] border-t-4 border-[#d4b065]">
+    © 2025 Ninkasi Beer — Todos os direitos reservados.
+  </footer>
+</body>
+</html>

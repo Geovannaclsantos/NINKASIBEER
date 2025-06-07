@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ninkasi Beer – Jogo do Processo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #d4a857;
+      --dark: #1e1a13;
+      --light: #f9f6ef;
+      --accent: #fff6e5;
+      --success: #c3e6cb;
+      --error: #f5c6cb;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      padding-top: 80px;
+    }
+
+    header {
+      background-color: #f2e9d8;
+      border-bottom: 4px solid var(--gold);
+      border-top: 4px solid var(--gold);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 10;
+    }
+
+    header span {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 1.25rem;
+    }
+
+    nav a {
+      margin-left: 1rem;
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 600;
+    }
+    nav a:hover { color: var(--gold); }
+
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .zones {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .zone {
+      border: 2px dashed var(--gold);
+      border-radius: 12px;
+      width: 220px;
+      min-height: 150px;
+      padding: 1rem;
+      background-color: var(--accent);
+      font-family: 'Cinzel', serif;
+    }
+
+    .cards {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1rem;
+      width: 180px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      font-weight: bold;
+      cursor: grab;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+
+    .correct { background-color: var(--success); }
+    .incorrect { background-color: var(--error); }
+
+    #intro {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: var(--accent);
+      border-radius: 8px;
+    }
+
+    #startGameBtn {
+      background: var(--dark);
+      color: var(--gold);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .modal, #congratsModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(30, 26, 19, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #fff6e5;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      position: relative;
+    }
+
+    .close-button {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #1e1a13;
+      font-weight: bold;
+    }
+
+    .close-button:hover { color: #a00; }
+
+    .hidden { display: none !important; }
+
+    #gameArea { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <span>Ninkasi Beer</span>
+    <nav>
+      <a href="/index.html"class="hover:text-[#d4b065] font-semibold">Início</a>
+      <a href="/ranking.html" id="openRanking" >Ranking</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="intro">
+      <h1>Jogo do Processo de Produção</h1>
+      <p>Arraste as cartas para a categoria correta:</p>
+      <ul style="text-align: left; margin: 1rem 0;">
+        <li><strong>Agrega Valor:</strong> Etapas essenciais que melhoram o produto final</li>
+        <li><strong>Necessária:</strong> Etapas obrigatórias, mas que não agregam valor direto</li>
+        <li><strong>Não Agrega:</strong> Desperdícios ou atividades sem valor</li>
+      </ul>
+      <input id="playerName" placeholder="Digite seu nome" style="padding:0.5rem;width:100%;margin:0.5rem 0;" />
+      <button id="startGameBtn">Iniciar Jogo</button>
+    </section>
+
+    <div id="gameArea">
+      <div class="zones">
+        <div class="zone" data-category="agrega">Agrega Valor</div>
+        <div class="zone" data-category="necessaria">Necessária</div>
+        <div class="zone" data-category="nao-agrega">Não Agrega</div>
+      </div>
+      <div class="cards"></div>
+    </div>
+
+    <!-- Modal Parabéns -->
+    <div id="congratsModal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-button" id="closeCongrats">&times;</span>
+        <h2 id="congratsTitle">Parabéns!</h2>
+        <img id="congratsImage" src="/img/parabens.png" alt="Resultado" style="width: 100%; max-width: 300px; margin: 1rem auto;" />
+        <p id="congratsText"></p>
+        <button onclick="location.reload()">Jogar Novamente</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+  const allCards = [
+    { img: '/img/imgjogo/Brassagem-Photoroom.png', desc: 'Brassagem', cat: 'agrega', pts: 4 },
+    { img: '/img/imgjogo/Fervuramostro-Photoroom.png', desc: 'Fervura', cat: 'agrega', pts: 5 },
+    { img: '/img/imgjogo/Envase-Photoroom.png', desc: 'Envase', cat: 'agrega', pts: 3 },
+    { img: 'img/imgjogo/Filtro-Photoroom.png', desc: 'Filtragem', cat: 'agrega', pts: 5 },
+    { img: 'img/imgjogo/Celular-Photoroom.png', desc: 'Ficar no Celular', cat: 'nao-agrega', pts: 3 },
+    { img: 'img/imgjogo/Rotulação-Photoroom.png', desc: 'Rotulagem', cat: 'necessaria', pts: 3 },
+    { img: 'img/imgjogo/pausacafe-Photoroom.png', desc: 'Pausa pro café', cat: 'nao-agrega', pts: 3 },
+    { img: 'img/imgjogo/Estoque-Photoroom.png', desc: 'Controle de estoque', cat: 'necessaria', pts: 4 },
+    { img: 'img/imgjogo/sanitização-Photoroom.png', desc: 'Sanitização dos utensilios', cat: 'necessaria', pts: 4 },
+    { img: 'img/imgjogo/Carbonatação-Photoroom.png', desc: 'Carbonatação', cat: 'agrega', pts: 5 },
+    { img: 'img/imgjogo/Monitorar-Photoroom.png', desc: 'Controle de Temperatura', cat: 'necessaria', pts: 4 },
+    { img: 'img/imgjogo/medicaoph-Photoroom.png', desc: 'Ajuste de pH', cat: 'necessaria', pts: 5 },
+    { img: 'img/imgjogo/limpezasala-Photoroom.png', desc: 'Limpeza da sala', cat: 'necessaria', pts: 3 },
+    { img: 'img/imgjogo/descanso-Photoroom.png', desc: 'Descanso não programado', cat: 'nao-agrega', pts: 3 },
+    { img: 'img/imgjogo/Checklist-Photoroom.png', desc: 'Checklist de equipamentos', cat: 'necessaria', pts: 4 },
+    { img: 'img/imgjogo/densidade-Photoroom.png', desc: 'Medição de densidade', cat: 'agrega', pts: 4 },
+    { img: 'img/imgjogo/espera-Photoroom.png', desc: 'Espera por material', cat: 'nao-agrega', pts: 3 }
+  ];
+
+  let deck = [], score = 0, currentIndex = 0, cardsSoltas = 0;
+  const maxCards = 12;
+  const cardsContainer = document.querySelector('.cards');
+  const zones = document.querySelectorAll('.zone');
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function getCategoryTitle(key) {
+    if (key === 'agrega') return 'Agrega Valor';
+    if (key === 'necessaria') return 'Necessária';
+    if (key === 'nao-agrega') return 'Não Agrega';
+    return '';
+  }
+
+  function loadNextCards() {
+    cardsSoltas = 0;
+
+    // Mantém os títulos das zonas
+    zones.forEach(zone => {
+      const title = zone.getAttribute('data-category');
+      zone.innerHTML = `<strong>${getCategoryTitle(title)}</strong>`;
+    });
+
+    cardsContainer.innerHTML = '';
+    const next = deck.slice(currentIndex, currentIndex + 3);
+    next.forEach(card => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.draggable = true;
+      div.dataset.category = card.cat;
+      div.dataset.points = card.pts;
+      div.innerHTML = `<img src="${card.img}" alt="${card.desc}" /><p>${card.desc}</p>`;
+      cardsContainer.appendChild(div);
+    });
+    addDragEvents();
+  }
+
+  function addDragEvents() {
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('dragstart', () => card.classList.add('dragging'));
+      card.addEventListener('dragend', () => card.classList.remove('dragging'));
+    });
+  }
+
+  zones.forEach(zone => {
+    zone.addEventListener('dragover', e => e.preventDefault());
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      const card = document.querySelector('.dragging');
+      if (!card) return;
+
+      const correct = card.dataset.category === zone.dataset.category;
+      score += correct ? parseInt(card.dataset.points) : 0;
+      card.classList.add(correct ? 'correct' : 'incorrect');
+      zone.appendChild(card);
+
+      cardsSoltas++;
+      if (cardsSoltas === 3) {
+        currentIndex += 3;
+        setTimeout(() => {
+          if (currentIndex >= maxCards) showResult();
+          else loadNextCards();
+        }, 800);
+      }
+    });
+  });
+
+  function saveToLocalRanking(player, score) {
+    let data = JSON.parse(localStorage.getItem("ninkasiRanking") || "[]");
+    data.push({ nome: player, pontos: score });
+    localStorage.setItem("ninkasiRanking", JSON.stringify(data));
+  }
+
+  function showResult() {
+    const player = document.getElementById('playerName').value || 'Jogador';
+    saveToLocalRanking(player, score);
+    const stored = JSON.parse(localStorage.getItem("ninkasiRanking") || "[]");
+    stored.sort((a, b) => b.pontos - a.pontos);
+    const pos = stored.findIndex(p => p.nome === player && p.pontos === score) + 1;
+
+    const title = document.getElementById('congratsTitle');
+    const image = document.getElementById('congratsImage');
+    const text = document.getElementById('congratsText');
+
+    if (score < 40) {
+      title.innerText = 'Talvez na próxima!';
+      image.src = '/img/tente-novamente.png';
+      text.innerText = `${player}, você fez apenas ${score} pontos. Que tal tentar de novo?`;
+    } else {
+      title.innerText = 'Parabéns!';
+      image.src = '/img/parabens.png';
+      text.innerText = `${player}, você fez ${score} pontos! Sua posição no ranking: ${pos}º`;
+    }
+
+    document.getElementById('congratsModal').classList.remove('hidden');
+    document.getElementById('congratsModal').style.display = 'flex';
+  }
+
+  document.getElementById('startGameBtn').addEventListener('click', () => {
+    const name = document.getElementById('playerName').value.trim();
+    if (!name) return alert('Digite seu nome!');
+    document.getElementById('intro').style.display = 'none';
+    document.getElementById('gameArea').style.display = 'block';
+    deck = shuffle([...allCards]).slice(0, maxCards);
+    score = 0;
+    currentIndex = 0;
+    loadNextCards();
+  });
+
+  window.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('congratsModal').classList.add('hidden');
+    document.getElementById('congratsModal').style.display = 'none';
+    document.getElementById('closeCongrats').addEventListener('click', () => {
+      document.getElementById('congratsModal').classList.add('hidden');
+      document.getElementById('congratsModal').style.display = 'none';
+    });
+  });
+</script>
+</body>
+</html>
